@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  slug               String   @id
+  title              String
+  artist             String
+  date               String
+  doors              String
+  showTime           String
+  venue              String
+  genre              String   // JSON string[]
+  description        String
+  price              Float?
+  capacity           Int      @default(0)
+  isSoldOut          Boolean  @default(false)
+  imageUrl           String   @default("")
+  allowsRegistration Boolean  @default(false)
+  lineup             String   // JSON LineupArtist[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  eventSlug String
+  option    String   // "yes" | "maybe" | "no"
+  createdAt DateTime @default(now())
+
+  @@index([eventSlug])
+}
+
+model Registration {
+  id           String   @id @default(cuid())
+  eventSlug    String
+  name         String
+  email        String
+  registeredAt DateTime @default(now())
+
+  @@unique([eventSlug, email])
+  @@index([eventSlug])
+}

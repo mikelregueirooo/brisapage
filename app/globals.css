@@ -1,0 +1,245 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design tokens ─── */
+:root {
+  --color-bg:              #0a0a0a;
+  --color-surface:         #111111;
+  --color-surface-2:       #1a1a1a;
+  --color-surface-offset:  #222222;
+  --color-border:          rgba(255, 255, 255, 0.08);
+  --color-primary:         #e01d2c;
+  --color-primary-hover:   #c4111f;
+  --color-primary-glow:    rgba(224, 29, 44, 0.25);
+  --color-accent:          #f5c400;
+  --color-accent-hover:    #d4a800;
+  --color-accent-glow:     rgba(245, 196, 0, 0.2);
+  --color-text:            #f0f0f0;
+  --color-text-muted:      #888888;
+  --color-text-faint:      #444444;
+}
+
+/* ─── Base reset ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+}
+
+/* ─── Selection ─── */
+::selection {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* ─── Focus ring (WCAG AA) ─── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-faint);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ─── Typography utilities ─── */
+.font-display {
+  font-family: var(--font-bebas), sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.font-mono-accent {
+  font-family: var(--font-space-mono), monospace;
+}
+
+/* ─── CTA glow pulse ─── */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 12px var(--color-primary-glow),
+                0 0 24px var(--color-primary-glow);
+  }
+  50% {
+    box-shadow: 0 0 24px var(--color-primary-glow),
+                0 0 48px var(--color-primary-glow),
+                0 0 64px rgba(224, 29, 44, 0.12);
+  }
+}
+
+.btn-glow {
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+
+/* ─── Scroll indicator bounce ─── */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+.scroll-bounce {
+  animation: scroll-bounce 1.6s ease-in-out infinite;
+}
+
+/* ─── Grain texture overlay ─── */
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+}
+
+/* ─── Surface card ─── */
+.card-surface {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+/* ─── Badge ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.badge-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.badge-accent {
+  background-color: var(--color-accent);
+  color: #0a0a0a;
+}
+
+.badge-surface {
+  background-color: var(--color-surface-offset);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+/* ─── Button base ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  text-decoration: none;
+  border: none;
+  outline: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  box-shadow: 0 0 20px var(--color-primary-glow);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn-outline:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ─── Timeline dot ─── */
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─── Event card hover glow ─── */
+.event-card-body {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  transition: box-shadow 0.3s ease;
+}
+
+.event-card:hover .event-card-body,
+.event-card:focus .event-card-body {
+  box-shadow: 0 8px 32px var(--color-primary-glow);
+}
+
+/* ─── Social button ─── */
+.social-btn {
+  background-color: var(--color-surface-offset);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.social-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ─── Reduced motion: disable non-essential animations ─── */
+@media (prefers-reduced-motion: reduce) {
+  .btn-glow,
+  .scroll-bounce {
+    animation: none;
+  }
+}
