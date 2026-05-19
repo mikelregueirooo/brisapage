@@ -5,25 +5,20 @@ import InfoSection from "@/components/home/InfoSection";
 import { getEvents } from "@/lib/events";
 import { getVotes } from "@/lib/votes";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "El Brisa — Donde el mar se convierte en fiesta",
   description:
     "Chiringuito de playa con los mejores eventos en directo de la costa. Música en vivo, DJ sets y ambiente único frente al mar.",
 };
 
-export default async function HomePage() {
-  const events = await getEvents();
-
-  // Fetch vote counts for all events in parallel
-  const voteTotals = await Promise.all(
-    events.map(async (e) => {
-      const v = await getVotes(e.slug);
-      return { slug: e.slug, total: v.yes + v.maybe + v.no };
+export default function HomePage() {
+  const events = getEvents();
+  const voteMap = Object.fromEntries(
+    events.map((e) => {
+      const v = getVotes(e.slug);
+      return [e.slug, v.yes + v.maybe + v.no];
     })
   );
-  const voteMap = Object.fromEntries(voteTotals.map((v) => [v.slug, v.total]));
 
   return (
     <>

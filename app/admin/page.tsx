@@ -10,22 +10,16 @@ import EventsTable from "@/components/admin/EventsTable";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Dashboard" };
 
-export default async function AdminDashboard() {
-  const events = await getEvents();
-
-  const enriched = await Promise.all(
-    events.map(async (e) => {
-      const v = await getVotes(e.slug);
-      return {
-        ...e,
-        voteTotal: v.yes + v.maybe + v.no,
-        registrationCount: e.allowsRegistration
-          ? await getRegistrationCount(e.slug)
-          : 0,
-      };
-    })
-  );
-
+export default function AdminDashboard() {
+  const events = getEvents();
+  const enriched = events.map((e) => {
+    const v = getVotes(e.slug);
+    return {
+      ...e,
+      voteTotal: v.yes + v.maybe + v.no,
+      registrationCount: e.allowsRegistration ? getRegistrationCount(e.slug) : 0,
+    };
+  });
   const totalVotes = enriched.reduce((acc, e) => acc + e.voteTotal, 0);
   const totalRegistrations = enriched.reduce((acc, e) => acc + e.registrationCount, 0);
 
@@ -33,10 +27,7 @@ export default async function AdminDashboard() {
     <div className="p-6 lg:p-8 max-w-screen-xl">
       <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
         <div>
-          <h1
-            className="font-display text-3xl lg:text-4xl"
-            style={{ color: "var(--color-text)" }}
-          >
+          <h1 className="font-display text-3xl lg:text-4xl" style={{ color: "var(--color-text)" }}>
             DASHBOARD
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--color-text-muted)" }}>
@@ -48,23 +39,13 @@ export default async function AdminDashboard() {
           Nuevo Evento
         </Link>
       </div>
-
-      <StatsCards
-        totalEvents={events.length}
-        totalVotes={totalVotes}
-        totalRegistrations={totalRegistrations}
-      />
-
+      <StatsCards totalEvents={events.length} totalVotes={totalVotes} totalRegistrations={totalRegistrations} />
       <div className="mb-4">
-        <h2 className="font-display text-xl" style={{ color: "var(--color-text)" }}>
-          EVENTOS
-        </h2>
+        <h2 className="font-display text-xl" style={{ color: "var(--color-text)" }}>EVENTOS</h2>
       </div>
       <EventsTable events={enriched} />
-
       <p className="mt-6 text-xs" style={{ color: "var(--color-text-faint)" }}>
-        Los datos se persisten en SQLite (prisma/dev.db).
-        Añade autenticación antes de desplegar en producción.
+        Los datos son en memoria y se reinician con el servidor. Para persistencia añade una base de datos.
       </p>
     </div>
   );

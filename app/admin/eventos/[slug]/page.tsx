@@ -9,24 +9,20 @@ import EventForm from "@/components/admin/EventForm";
 
 export const dynamic = "force-dynamic";
 
-interface Props {
-  params: { slug: string };
-}
+interface Props { params: { slug: string } }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const event = await getEventBySlug(params.slug);
+export function generateMetadata({ params }: Props): Metadata {
+  const event = getEventBySlug(params.slug);
   return { title: event ? `Editar — ${event.artist}` : "No encontrado" };
 }
 
-export default async function EditEventPage({ params }: Props) {
-  const event = await getEventBySlug(params.slug);
+export default function EditEventPage({ params }: Props) {
+  const event = getEventBySlug(params.slug);
   if (!event) notFound();
 
-  const votes = await getVotes(event.slug);
+  const votes = getVotes(event.slug);
   const totalVotes = votes.yes + votes.maybe + votes.no;
-  const registrations = event.allowsRegistration
-    ? await getRegistrations(event.slug)
-    : [];
+  const registrations = event.allowsRegistration ? getRegistrations(event.slug) : [];
 
   return (
     <div className="p-6 lg:p-8 max-w-screen-xl">
@@ -36,13 +32,9 @@ export default async function EditEventPage({ params }: Props) {
           className="inline-flex items-center gap-1.5 text-sm mb-4 transition-colors hover:text-[var(--color-primary)]"
           style={{ color: "var(--color-text-muted)" }}
         >
-          <ArrowLeft size={14} />
-          Volver al dashboard
+          <ArrowLeft size={14} /> Volver al dashboard
         </Link>
-        <h1
-          className="font-display text-3xl lg:text-4xl"
-          style={{ color: "var(--color-text)" }}
-        >
+        <h1 className="font-display text-3xl lg:text-4xl" style={{ color: "var(--color-text)" }}>
           EDITAR EVENTO
         </h1>
         <p className="text-sm mt-1" style={{ color: "var(--color-text-muted)" }}>
@@ -50,78 +42,48 @@ export default async function EditEventPage({ params }: Props) {
         </p>
       </div>
 
-      {/* Quick stats */}
       <div className="flex flex-wrap gap-3 mb-8">
-        <div
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
-          style={{ backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", color: "var(--color-text-muted)" }}
-        >
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
+          style={{ backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", color: "var(--color-text-muted)" }}>
           <span style={{ color: "var(--color-accent)" }}>🔥</span>
-          <span>
-            <strong style={{ color: "var(--color-text)" }}>{totalVotes}</strong> votos
-          </span>
+          <span><strong style={{ color: "var(--color-text)" }}>{totalVotes}</strong> votos</span>
         </div>
         {event.allowsRegistration && (
-          <div
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
-            style={{ backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", color: "var(--color-text-muted)" }}
-          >
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
+            style={{ backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", color: "var(--color-text-muted)" }}>
             <Users size={12} style={{ color: "#60a5fa" }} />
-            <span>
-              <strong style={{ color: "var(--color-text)" }}>{registrations.length}</strong> inscritos
-            </span>
+            <span><strong style={{ color: "var(--color-text)" }}>{registrations.length}</strong> inscritos</span>
           </div>
         )}
       </div>
 
       <EventForm initialEvent={event} />
 
-      {/* Registrations table */}
       {event.allowsRegistration && registrations.length > 0 && (
-        <section className="mt-10" aria-labelledby="reg-heading">
+        <section className="mt-10">
           <div className="card-surface overflow-hidden">
-            <div
-              className="px-5 py-4 flex items-center gap-2"
-              style={{ borderBottom: "1px solid var(--color-border)" }}
-            >
-              <Users size={15} style={{ color: "#60a5fa" }} aria-hidden="true" />
-              <h2
-                id="reg-heading"
-                className="font-display text-lg"
-                style={{ color: "var(--color-text)" }}
-              >
+            <div className="px-5 py-4 flex items-center gap-2" style={{ borderBottom: "1px solid var(--color-border)" }}>
+              <Users size={15} style={{ color: "#60a5fa" }} />
+              <h2 className="font-display text-lg" style={{ color: "var(--color-text)" }}>
                 INSCRITOS ({registrations.length})
               </h2>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm" aria-label="Lista de inscritos">
+              <table className="w-full text-sm">
                 <thead>
                   <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
                     {["Nombre", "Email", "Fecha"].map((h) => (
-                      <th
-                        key={h}
-                        className="px-4 py-3 text-left font-mono-accent text-[10px] tracking-widest uppercase"
-                        style={{ color: "var(--color-text-faint)" }}
-                        scope="col"
-                      >
-                        {h}
-                      </th>
+                      <th key={h} className="px-4 py-3 text-left font-mono-accent text-[10px] tracking-widest uppercase"
+                        style={{ color: "var(--color-text-faint)" }} scope="col">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {registrations.map((r, i) => (
-                    <tr
-                      key={`${r.email}-${i}`}
-                      style={{ borderBottom: "1px solid var(--color-border)" }}
-                      className="hover:bg-white/[0.02] transition-colors"
-                    >
-                      <td className="px-4 py-2.5 font-medium" style={{ color: "var(--color-text)" }}>
-                        {r.name}
-                      </td>
-                      <td className="px-4 py-2.5 font-mono-accent text-xs" style={{ color: "var(--color-text-muted)" }}>
-                        {r.email}
-                      </td>
+                    <tr key={`${r.email}-${i}`} style={{ borderBottom: "1px solid var(--color-border)" }}
+                      className="hover:bg-white/[0.02]">
+                      <td className="px-4 py-2.5 font-medium" style={{ color: "var(--color-text)" }}>{r.name}</td>
+                      <td className="px-4 py-2.5 font-mono-accent text-xs" style={{ color: "var(--color-text-muted)" }}>{r.email}</td>
                       <td className="px-4 py-2.5 font-mono-accent text-xs" style={{ color: "var(--color-text-faint)" }}>
                         {new Date(r.registeredAt).toLocaleString("es-ES", { dateStyle: "short", timeStyle: "short" })}
                       </td>

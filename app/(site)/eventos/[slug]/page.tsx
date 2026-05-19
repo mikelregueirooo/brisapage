@@ -1,27 +1,25 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getEventBySlug } from "@/lib/events";
+import { getEventBySlug, events } from "@/lib/events";
 import EventHero from "@/components/event/EventHero";
 import EventDetails from "@/components/event/EventDetails";
 import VoteSection from "@/components/event/VoteSection";
 import SignupSection from "@/components/event/SignupSection";
 
-export const dynamic = "force-dynamic";
-
 interface Props {
   params: { slug: string };
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const event = await getEventBySlug(params.slug);
+export function generateStaticParams() {
+  return events.map((e) => ({ slug: e.slug }));
+}
+
+export function generateMetadata({ params }: Props): Metadata {
+  const event = getEventBySlug(params.slug);
   if (!event) return { title: "Evento no encontrado" };
-
   const formattedDate = new Date(event.date).toLocaleDateString("es-ES", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+    day: "numeric", month: "long", year: "numeric",
   });
-
   return {
     title: `${event.artist} — ${event.title}`,
     description: `${event.description} ${formattedDate} en ${event.venue}.`,
@@ -33,10 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function EventPage({ params }: Props) {
-  const event = await getEventBySlug(params.slug);
+export default function EventPage({ params }: Props) {
+  const event = getEventBySlug(params.slug);
   if (!event) notFound();
-
   return (
     <>
       <EventHero event={event} />
