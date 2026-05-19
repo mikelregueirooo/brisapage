@@ -187,7 +187,7 @@ function BrisaLogo() {
   return (
     <span className="flex items-center select-none">
       <Image
-        src="/logo.jpg"
+        src="/logo.png"
         alt="El Brisa"
         width={120}
         height={40}
