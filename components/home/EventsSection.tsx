@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Event } from "@/types";
 import EventCard from "./EventCard";
@@ -11,6 +12,11 @@ interface Props {
 
 export default function EventsSection({ events, voteMap = {} }: Props) {
   const shouldReduce = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  // Before JS loads, render everything visible (no opacity:0 in static HTML)
+  const animate = mounted && !shouldReduce;
 
   return (
     <section
@@ -23,8 +29,9 @@ export default function EventsSection({ events, voteMap = {} }: Props) {
         {/* Section header */}
         <motion.div
           className="mb-12 lg:mb-16"
-          initial={shouldReduce ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={animate ? { opacity: 0, y: 20 } : false}
+          whileInView={animate ? { opacity: 1, y: 0 } : undefined}
+          animate={animate ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         >
@@ -56,13 +63,14 @@ export default function EventsSection({ events, voteMap = {} }: Props) {
             {events.map((event, i) => (
               <motion.div
                 key={event.slug}
-                initial={shouldReduce ? false : { opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={animate ? { opacity: 0, y: 20 } : false}
+                whileInView={animate ? { opacity: 1, y: 0 } : undefined}
+                animate={animate ? undefined : { opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{
                   duration: 0.6,
                   ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-                  delay: shouldReduce ? 0 : i * 0.08,
+                  delay: animate ? i * 0.08 : 0,
                 }}
               >
                 <EventCard event={event} voteCount={voteMap[event.slug] ?? 0} />

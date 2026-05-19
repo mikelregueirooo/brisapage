@@ -51,6 +51,8 @@ function AnimatedNumber({ value, suffix, active }: { value: number; suffix: stri
 
 export default function InfoSection() {
   const shouldReduce = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
@@ -65,8 +67,9 @@ export default function InfoSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Text */}
           <motion.div
-            initial={shouldReduce ? false : { opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={mounted && !shouldReduce ? { opacity: 0, x: -30 } : false}
+            whileInView={mounted && !shouldReduce ? { opacity: 1, x: 0 } : undefined}
+            animate={mounted ? undefined : { opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
           >
@@ -101,13 +104,14 @@ export default function InfoSection() {
             {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
-                initial={shouldReduce ? false : { opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={mounted && !shouldReduce ? { opacity: 0, y: 20 } : false}
+                whileInView={mounted && !shouldReduce ? { opacity: 1, y: 0 } : undefined}
+                animate={mounted ? undefined : { opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{
                   duration: 0.6,
                   ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-                  delay: i * 0.1,
+                  delay: mounted ? i * 0.1 : 0,
                 }}
                 className="flex items-center gap-6 p-5 rounded-xl"
                 style={{

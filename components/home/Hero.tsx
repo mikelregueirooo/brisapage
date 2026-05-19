@@ -1,22 +1,23 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
 export default function Hero() {
   const shouldReduce = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const animate = mounted && !shouldReduce;
 
   const container = {
     hidden: {},
-    visible: {
-      transition: shouldReduce
-        ? {}
-        : { staggerChildren: 0.15, delayChildren: 0.3 },
-    },
+    visible: { transition: { staggerChildren: 0.15, delayChildren: 0.3 } },
   };
 
   const item = {
-    hidden: shouldReduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
@@ -30,10 +31,7 @@ export default function Hero() {
       style={{ backgroundColor: "var(--color-bg)" }}
       aria-labelledby="hero-heading"
     >
-      {/* Grain texture */}
       <div className="grain-overlay" aria-hidden="true" />
-
-      {/* Radial glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
@@ -43,26 +41,23 @@ export default function Hero() {
         }}
       />
 
-      {/* Content */}
       <motion.div
         className="relative z-10 px-4 sm:px-6 max-w-4xl mx-auto"
-        variants={container}
-        initial="hidden"
+        variants={animate ? container : undefined}
+        initial={animate ? "hidden" : false}
         animate="visible"
       >
-        {/* Eyebrow */}
         <motion.p
-          variants={item}
+          variants={animate ? item : undefined}
           className="font-mono-accent text-xs sm:text-sm tracking-[0.2em] uppercase mb-4"
           style={{ color: "var(--color-primary)" }}
         >
           Chiringuito · Vigo · Costa Atlántica
         </motion.p>
 
-        {/* Main heading */}
         <motion.h1
           id="hero-heading"
-          variants={item}
+          variants={animate ? item : undefined}
           className="font-display leading-none mb-2"
           style={{
             fontSize: "clamp(4rem, 14vw, 9rem)",
@@ -75,26 +70,20 @@ export default function Hero() {
           EL BRISA
         </motion.h1>
 
-        {/* Tagline */}
         <motion.p
-          variants={item}
+          variants={animate ? item : undefined}
           className="text-base sm:text-xl md:text-2xl font-light mb-10 max-w-lg mx-auto"
           style={{ color: "var(--color-text-muted)" }}
         >
           Donde el mar se convierte en fiesta
         </motion.p>
 
-        {/* CTA */}
-        <motion.div variants={item}>
-          <Link
-            href="#eventos"
-            className="btn btn-primary btn-glow text-base px-8 py-4"
-          >
+        <motion.div variants={animate ? item : undefined}>
+          <Link href="#eventos" className="btn btn-primary btn-glow text-base px-8 py-4">
             Ver Eventos
           </Link>
         </motion.div>
       </motion.div>
-
     </section>
   );
 }
