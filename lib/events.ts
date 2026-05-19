@@ -53,7 +53,7 @@ const seedEvents: Event[] = [
     venue: "El Brisa — Terraza Principal",
     genre: ["Flamenco", "Fusión"],
     description:
-      "Arte flamenco en estado puro con vistas al mar. Tablao íntimo con carta de tapas y vinos.",
+      "Arte flamenco en estado puro. Tablao íntimo con la mejor música en directo.",
     price: null,
     capacity: 150,
     isSoldOut: false,

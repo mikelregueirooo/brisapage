@@ -86,13 +86,12 @@ export default function InfoSection() {
             <div className="space-y-4 text-base leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
               <p>
                 El Brisa nació como un chiringuito de playa y se convirtió en
-                referente cultural de la costa atlántica. Música, mar y la mejor
-                gastronomía gallega en un espacio único.
+                referente cultural de la costa atlántica. Música, mar y el mejor
+                ambiente en un espacio único.
               </p>
               <p>
-                Terraza con vistas al Atlántico, pista interior con el mejor
-                sonido y una programación que mezcla lo local con lo
-                internacional. Aquí el verano no termina nunca.
+                Una programación que mezcla lo local con lo internacional.
+                Aquí el verano no termina nunca.
               </p>
             </div>
           </motion.div>

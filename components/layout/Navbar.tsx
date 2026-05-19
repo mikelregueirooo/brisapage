@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Menu, X, Waves } from "lucide-react";
@@ -184,41 +185,15 @@ export default function Navbar() {
 
 function BrisaLogo() {
   return (
-    <span className="flex items-center gap-2 select-none">
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        {/* Wave shape */}
-        <path
-          d="M2 20 C6 14, 10 26, 16 20 C22 14, 26 26, 30 20"
-          stroke="#e01d2c"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path
-          d="M2 24 C6 18, 10 30, 16 24 C22 18, 26 30, 30 24"
-          stroke="#f5c400"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.7"
-        />
-        {/* Sun dot */}
-        <circle cx="16" cy="10" r="4" fill="#f5c400" opacity="0.9" />
-        <circle cx="16" cy="10" r="2" fill="#f5c400" />
-      </svg>
-      <span
-        className="font-display text-xl tracking-wider"
-        style={{ color: "var(--color-text)" }}
-      >
-        EL BRISA
-      </span>
+    <span className="flex items-center select-none">
+      <Image
+        src="/logo.jpg"
+        alt="El Brisa"
+        width={120}
+        height={40}
+        className="object-contain"
+        priority
+      />
     </span>
   );
 }
